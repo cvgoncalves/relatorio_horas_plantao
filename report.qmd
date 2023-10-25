@@ -1,0 +1,119 @@
+---
+title: "Demonstrativo de Plantões"
+format: PrettyPDF-pdf
+---
+
+```{python}
+#| tags: [parameters]
+#| echo: false
+crm = '194281'
+date = '21-06-2023'
+```
+
+```{python}
+#| echo: false
+crm = str(crm)
+```
+```{python}
+#| echo: false
+## Imports
+
+import pandas as pd
+from datetime import datetime
+from helpers import *
+```
+
+# Relatorio de Plantões Realizados
+
+Esse relatório é um demonstrativo de horas em plantões e seus correspondentes valores.
+
+
+```{python}
+#| echo: False
+#| warning: false
+
+
+# TODO - Add adicionais to sql
+adicionais = get_adicionais()
+
+data = get_data(date)
+
+```
+
+
+```{python}
+#| echo: False
+#| output: asis
+
+dr  = data.query('CRM == @crm')
+
+```
+
+## Profissional
+
+```{python}
+#| echo: False
+#| message: false
+#| warning: false
+#| output: asis
+
+for name, crm, esp in zip(dr['Nome completo'].unique(), dr['CRM'].unique(), dr['Especialidade'].unique()):
+    print(f'**Nome**: {name} \n') 
+    print(f'**CRM**: {crm}\n')
+
+print(' ------ \n')
+print(':::{.border .callout-important}')
+print('#### Importante')
+print(f'Previsão de pagamento dia 25 - 30 do mês {datetime.datetime.today().strftime("%m/%Y")}.\n')
+print('\n \n')
+print('|**Hospital** | **Ciclo de Pagamento**|')
+print('|:---|:---:|')
+for hospital in dr['hospital'].unique():
+    print(f'|**{hospital}**| dia **{get_date_by_hospital(date, hospital)[0].strftime("%d/%m")}** ao dia **{get_date_by_hospital(date, hospital)[1].strftime("%d/%m")}** |')
+
+print(':::')
+```
+
+:::{.callout-note}
+#### Duvidas?
+
+**Contato:** {{< var email.info >}}.
+:::
+
+{{< pagebreak >}}
+
+## Sumário de Plantões
+
+```{python}
+#| echo: False
+#| message: false
+#| warning: false
+#| output: asis
+
+summary_data(dr, date)
+```
+
+```{python}
+#| echo: False
+#| message: false
+#| warning: false
+#| output: asis
+
+# display_adicionais(adicionais, crm)
+```
+
+### Detalhamento
+
+
+```{python}
+#| echo: False
+#| message: false
+#| warning: false
+#| output: asis
+
+
+display_hospitals(dr, date)
+```
+
+
+
