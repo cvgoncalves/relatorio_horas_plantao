@@ -1,7 +1,7 @@
 import datetime
 from dateutil import relativedelta
 import pandas as pd
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, text
 from IPython.core.display import display
 
 
@@ -27,17 +27,18 @@ def get_min_max_dates(date):
 
 
 def get_data(date: str) -> pd.DataFrame:
-    engine = create_engine('postgresql://{user}:{password}@{host}/{table}')
+    engine = create_engine('postgresql://root:123mudar@nas.cgoncalves.home:2665/datalab')
+    con = engine.connect()
     min_date, max_date = get_min_max_dates(date)
-    query = """SELECT * FROM public.fechamento_plantoes WHERE "Data" between %s AND %s;"""
-    df = pd.read_sql(query, engine, params=(min_date, max_date))
+    query = text("SELECT * FROM public.fechamento_plantoes WHERE \"Data\" between :min_date AND :max_date")
+    df = pd.read_sql(query, con, params={"min_date": min_date, "max_date": max_date})
     return df
 
 def get_adicionais() -> pd.DataFrame:
     """
     This function will get the data from the plantoes_adicionais table
     """
-    engine = create_engine('postgresql://{user}:{password}@{host}/{table}')
+    engine = create_engine('postgresql://root:123mudar@nas.cgoncalves.home:2665/datalab')
     query = """select * FROM public.plantoes_adicionais;"""
     df = pd.read_sql(query, engine)
     return df
