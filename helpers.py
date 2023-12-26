@@ -27,7 +27,7 @@ def get_min_max_dates(date):
 
 
 def get_data(date: str) -> pd.DataFrame:
-    engine = create_engine('postgresql://root:123mudar@nas.cgoncalves.home:2665/datalab')
+    engine = create_engine('postgresql://{user}:{pass}@{server}/{table}')
     con = engine.connect()
     min_date, max_date = get_min_max_dates(date)
     query = text("SELECT * FROM public.fechamento_plantoes WHERE \"Data\" between :min_date AND :max_date")
