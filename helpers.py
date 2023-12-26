@@ -38,7 +38,7 @@ def get_adicionais() -> pd.DataFrame:
     """
     This function will get the data from the plantoes_adicionais table
     """
-    engine = create_engine('postgresql://root:123mudar@nas.cgoncalves.home:2665/datalab')
+    engine = create_engine('postgresql://{user}:{pass}@{server}/{table}')
     query = """select * FROM public.plantoes_adicionais;"""
     df = pd.read_sql(query, engine)
     return df
